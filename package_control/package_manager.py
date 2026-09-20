@@ -1327,7 +1327,7 @@ class PackageManager:
                     pkg.writestr('.python-version', python_version)
                 pkg.writestr('package-metadata.json', json.dumps(metadata))
                 for zipinfo in package_zip.infolist():
-                    if zipinfo.filename not in ignored_files:
+                    if not zipinfo.is_dir() and zipinfo.filename not in ignored_files:
                         pkg.writestr(
                             zipinfo.filename[len(common_folder):],
                             package_zip.read(zipinfo),
