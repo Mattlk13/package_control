@@ -1303,8 +1303,6 @@ class PackageManager:
                     (package_filename, e)
                 )
 
-        # Otherwise we go into a temp dir since we will be creating a
-        # new .sublime-package file later
         else:
             # If we already have a package-metadata.json file in
             # Packages/{package_name}/, but the package no longer contains
@@ -1321,7 +1319,7 @@ class PackageManager:
                 return False
 
             # write archive to disk as new zipfile, to ensure modified metadata is updated
-            new_package_file = package_file + '-new'
+            new_package_file = package_file + '-tmp'
             with zipfile.ZipFile(new_package_file, 'w', zipfile.ZIP_DEFLATED) as pkg:
                 if python_version != '3.3' and not have_python_version_file:
                     pkg.writestr('.python-version', python_version)
@@ -1334,7 +1332,7 @@ class PackageManager:
                             zipfile.ZIP_STORED if zipinfo.file_size < 512 else None
                         )
 
-            # replace possibly existing <name>.sublime-package with <name>.sublime-package-new
+            # replace possibly existing <name>.sublime-package with <name>.sublime-package-tmp
             old_package_file = package_file + '-old'
             try:
                 os.remove(old_package_file)
